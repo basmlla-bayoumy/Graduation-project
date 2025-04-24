@@ -6,7 +6,7 @@ class WordsModel {
   factory WordsModel.fromJson(jsonData) 
   {
     return WordsModel(
-      image:jsonData ?['largeImageURL'],
+      image:jsonData ?['image'],
      );
   }
 }

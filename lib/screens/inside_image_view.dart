@@ -60,8 +60,8 @@ class InsideImageView extends StatelessWidget {
                 ]),
             child: Center(
               child: Text(
-                'this is letter',
-                style: TextStyle(fontSize: 30, color: Colors.purple.withOpacity(.9),
+                detailsModel.text,
+                style: TextStyle(fontSize: 55, color: Colors.purple.withOpacity(.9),
                 fontWeight: FontWeight.bold),
               ),
             ),
