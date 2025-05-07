@@ -51,7 +51,7 @@ List<Widget> screens =  [
 
 List<String> Titles =  [
   'Home',
-  'camera',
+  'Chats',
   'Settings'
 ] ;
  

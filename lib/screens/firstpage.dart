@@ -37,7 +37,7 @@ class Firstpage extends StatelessWidget {
                 BottomNavigationBarItem(
                     icon: Icon(FontAwesomeIcons.house), label: 'Home'),
                     BottomNavigationBarItem(
-                    icon: Icon(FontAwesomeIcons.camera), label: 'camera'),
+                    icon: Icon(FontAwesomeIcons.solidMessage), label: 'Chats'),
                 BottomNavigationBarItem(
                     icon: Icon(FontAwesomeIcons.gear), label: 'Setting')
               ],
