@@ -45,6 +45,26 @@ class _CameraPageState extends State<CameraPage> {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Widget bottomSheet(){
 // return Container(
 //   height: 200,

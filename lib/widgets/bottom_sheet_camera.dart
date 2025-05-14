@@ -8,8 +8,9 @@ class BottomSheetCamera extends StatelessWidget {
 
   const BottomSheetCamera({super.key, required this.onImagePicked});
 
-  Future<void> _takePhoto(ImagePicker picker, BuildContext context) async {
-    final XFile? photo = await picker.pickImage(
+  Future<void> _takePhoto(BuildContext context) async {
+    final picker = ImagePicker();
+    final photo = await picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 1800,
       maxHeight: 1800,
@@ -17,65 +18,70 @@ class BottomSheetCamera extends StatelessWidget {
     );
     if (photo != null) {
       onImagePicked(File(photo.path));
-      Navigator.of(context).pop();
+      Navigator.pop(context);
     }
   }
 
-  Future<void> _pickImage(ImagePicker picker, BuildContext context) async {
+  Future<void> _pickImage(BuildContext context) async {
     try {
-      final XFile? image = await picker.pickImage(
+      final picker = ImagePicker();
+      final image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1800,
         maxHeight: 1800,
         imageQuality: 85,
       );
-
       if (image != null) {
         onImagePicked(File(image.path));
-        Navigator.of(context).pop();
+        Navigator.pop(context);
       }
     } catch (e) {
-      print('Image picker error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to pick image: $e')),
+        SnackBar(content: Text('حدث خطأ: $e')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ImagePicker picker = ImagePicker();
-    
     return Container(
-      height: 200,
-      width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.all(18),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 32),
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  FloatingActionButton(
-                    onPressed: () => _takePhoto(picker, context),
-                    child: Icon(FontAwesomeIcons.camera),
-                  ),
-                  Text('camera'),
-                ],
-              ),
-              SizedBox(width: 35),
-              Column(
-                children: [
-                  FloatingActionButton(
-                    onPressed: () => _pickImage(picker, context),
-                    child: Icon(FontAwesomeIcons.file),
-                  ),
-                  Text('Files')
-                ],
-              )
-            ],
-          ),
+      height: 150, // تم تصغير الارتفاع من 200 إلى 150
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16), // تم تقليل padding الرأسي
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'cameraBtn',
+                  mini: true,
+                  onPressed: () => _takePhoto(context),
+                  child: const Icon(FontAwesomeIcons.camera, size: 20),
+                ),
+                const SizedBox(height: 8),
+                const Text('Camera', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'galleryBtn',
+                  mini: true,
+                  onPressed: () => _pickImage(context),
+                  child: const Icon(FontAwesomeIcons.image, size: 20),
+                ),
+                const SizedBox(height: 8),
+                const Text('Gallery', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+          ],
         ),
       ),
     );

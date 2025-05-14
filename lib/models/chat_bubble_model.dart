@@ -8,6 +8,6 @@ class ChatBubble {
   ChatBubble({
     this.image,
     required this.status,
-    required this.isMe,
+    required this.isMe, String? imageUrl, required bool isError,
   });
 }
