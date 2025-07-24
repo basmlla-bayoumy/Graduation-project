@@ -6,12 +6,27 @@ import 'package:g2/cache_helper.dart';
 import 'package:g2/constants.dart';
 import 'package:g2/cubit/learn_me_cubit.dart';
 import 'package:g2/firebase_options.dart';
+import 'package:g2/models/chat_model.dart';
 import 'package:g2/screens/welcome_page2.dart';
 import 'package:g2/screens/welcomepage.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+ 
+  await Hive.initFlutter();
+
+  // تسجيل الـ Adapter
+  Hive.registerAdapter(ChatModelAdapter());
+
+// بتحذف الشاتات القديمة 
+  // await Hive.deleteBoxFromDisk('chats');
+
+  // افتح الصندوق
+  await Hive.openBox<ChatModel>('chats');
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

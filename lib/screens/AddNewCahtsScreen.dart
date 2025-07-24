@@ -6,6 +6,7 @@ import 'package:g2/models/chat_model.dart';
 import 'package:g2/services/fastApi_connection.dart';
 import 'package:g2/widgets/bottom_sheet_camera.dart';
 import 'package:g2/widgets/chat_bubble_widget.dart';
+import 'package:hive/hive.dart';
 
 class AddNewChatScreen extends StatefulWidget {
   const AddNewChatScreen({super.key});
@@ -17,90 +18,95 @@ class AddNewChatScreen extends StatefulWidget {
 class _AddNewChatScreenState extends State<AddNewChatScreen> {
   List<File> _pickedImages = [];
   List<ChatBubble> _chatBubbles = [];
+  List<String> _aiResponses = [];
   final AIImageService _aiImageService = AIImageService();
 
- void _sendImage(File image) async {
-  setState(() {
-    _chatBubbles.add(ChatBubble(
-      image: image,
-      status: "جاري تحليل الصورة...",
-      isMe: true,
-      isError: false,
-    ));
-  });
-
-  // جدول تحويل من فرانكو إلى عربي
-  const Map<String, String> labelMap = {
-    "aleff": "ا", "bb": "ب", "ta": "ت", "thaa": "ث",
-    "jeem": "ج", "ha": "ح", "khaa": "خ", "dal": "د",
-    "thal": "ذ", "ra": "ر", "zay": "ز", "seen": "س",
-    "sheen": "ش", "saad": "ص", "dhad": "ض", "taa": "ط",
-    "zaa": "ظ", "ain": "ع", "ghain": "غ", "fa": "ف",
-    "gaaf": "ق", "kaaf": "ك", "laam": "ل", "meem": "م",
-    "nun": "ن", "waw": "و", "yaa": "ي","la":"لا"
-  };
-
-  try {
-    final response = await _aiImageService.uploadImage(image);
-    
-    print('======= بداية الرد من الخادم =======');
-    print('نوع البيانات: ${response.runtimeType}');
-    print('المحتوى الكامل: $response');
-    print('======= نهاية الرد من الخادم =======');
-
-    String resultText = "لم يتم اكتشاف أي حروف";
-    List<String> detectedLetters = [];
-
-    if (response is Map<String, dynamic>) {
-      // الحالة 1: إذا كان الرد يحتوي على detections
-      if (response.containsKey('detections') && response['detections'] is List) {
-        final detections = response['detections'] as List;
-        detectedLetters = detections
-            .where((item) => item is Map && item['name'] != null)
-            .map((item) => item['name'] as String)
-            .toList();
-      }
-      // الحالة 2: إذا كان الرد يحتوي على letters مباشرة
-      else if (response.containsKey('letters') && response['letters'] is List) {
-        detectedLetters = List<String>.from(response['letters']);
-      }
-      // الحالة 3: إذا كان الرد يحتوي على word كمصفوفة نصية
-      else if (response.containsKey('word') && response['word'] is String) {
-        detectedLetters = (response['word'] as String).split(',');
-      }
-
-      // تطبيق الترجمة إذا وجدنا حروفاً
-      if (detectedLetters.isNotEmpty) {
-        final arabicLetters = detectedLetters
-            .map((franco) => labelMap[franco.trim().toLowerCase()] ?? franco)
-            .where((letter) => letter.isNotEmpty)
-            .toList();
-
-        if (arabicLetters.isNotEmpty) {
-          resultText = "الكلمة: ${arabicLetters.join('')}";
-        }
-      }
-    }
-
+  void _sendImage(File image) async {
     setState(() {
       _chatBubbles.add(ChatBubble(
-        status: resultText,
-        isMe: false,
+        image: image,
+        status: "جاري تحليل الصورة...",
+        isMe: true,
         isError: false,
       ));
     });
 
-  } catch (e) {
-    print('حدث خطأ: $e');
-    setState(() {
-      _chatBubbles.add(ChatBubble(
-        status: "حدث خطأ في التحليل: ${e.toString()}",
-        isMe: false,
-        isError: true,
-      ));
-    });
+    // جدول تحويل من فرانكو إلى عربي
+    const Map<String, String> labelMap = {
+      "aleff": "ا", "bb": "ب", "ta": "ت", "thaa": "ث",
+      "jeem": "ج", "ha": "ح", "khaa": "خ", "dal": "د",
+      "thal": "ذ", "ra": "ر", "zay": "ز", "seen": "س",
+      "sheen": "ش", "saad": "ص", "dhad": "ض", "taa": "ط",
+      "zaa": "ظ", "ain": "ع", "ghain": "غ", "fa": "ف",
+      "gaaf": "ق", "kaaf": "ك", "laam": "ل", "meem": "م",
+      "nun": "ن", "waw": "و", "yaa": "ي","la":"لا","haa":"ه",
+      "toot":"ة",
+    };
+
+    try {
+      final response = await _aiImageService.uploadImage(image);
+      
+      print('======= بداية الرد من الخادم =======');
+      print('نوع البيانات: ${response.runtimeType}');
+      print('المحتوى الكامل: $response');
+      print('======= نهاية الرد من الخادم =======');
+
+      String resultText = "لم يتم اكتشاف أي حروف";
+      List<String> detectedLetters = [];
+
+      if (response is Map<String, dynamic>) {
+        // الحالة 1: إذا كان الرد يحتوي على detections
+        if (response.containsKey('detections') && response['detections'] is List) {
+          final detections = response['detections'] as List;
+          detectedLetters = detections
+              .where((item) => item is Map && item['name'] != null)
+              .map((item) => item['name'] as String)
+              .toList();
+        }
+        // الحالة 2: إذا كان الرد يحتوي على letters مباشرة
+        else if (response.containsKey('letters') && response['letters'] is List) {
+          detectedLetters = List<String>.from(response['letters']);
+        }
+        // الحالة 3: إذا كان الرد يحتوي على word كمصفوفة نصية
+        else if (response.containsKey('word') && response['word'] is String) {
+          detectedLetters = (response['word'] as String).split(',');
+        }
+
+        // تطبيق الترجمة إذا وجدنا حروفاً
+        if (detectedLetters.isNotEmpty) {
+          final arabicLetters = detectedLetters
+              .map((franco) => labelMap[franco.trim().toLowerCase()] ?? franco)
+              .where((letter) => letter.isNotEmpty)
+              .toList();
+
+          if (arabicLetters.isNotEmpty) {
+            resultText = "الحرف: ${arabicLetters.join('')}";
+          }
+        }
+      }
+
+      _aiResponses.add(resultText); // حفظ الرد في القائمة
+      
+      setState(() {
+        _chatBubbles.add(ChatBubble(
+          status: resultText,
+          isMe: false,
+          isError: false,
+        ));
+      });
+
+    } catch (e) {
+      final errorMsg = "حدث خطأ في التحليل: ${e.toString()}";
+      _aiResponses.add(errorMsg);
+      setState(() {
+        _chatBubbles.add(ChatBubble(
+          status: errorMsg,
+          isMe: false,
+          isError: true,
+        ));
+      });
+    }
   }
-}
 
   void _showDetectedObjectInChat(String object) {
     setState(() {
@@ -110,6 +116,19 @@ class _AddNewChatScreenState extends State<AddNewChatScreen> {
           isError: false));
     });
   }
+
+  void _saveChat() {
+  if (_pickedImages.isEmpty) return;
+
+  final newChat = ChatModel(
+    message: "محادثة ${DateTime.now().toString()}",
+    subtitle: "تحتوي على ${_pickedImages.length} صورة",
+    imagePaths: _pickedImages.map((e) => e.path).toList(),
+    aiResponses: _aiResponses,
+  );
+  
+  Navigator.pop(context, newChat);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -121,16 +140,7 @@ class _AddNewChatScreenState extends State<AddNewChatScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               icon: const Icon(Icons.save, size: 24),
-              onPressed: _pickedImages.isEmpty
-                  ? null
-                  : () {
-                      final newChat = ChatModel(
-                        "محادثة جديدة",
-                        "تحتوي على ${_pickedImages.length} صورة",
-                        imagePaths: _pickedImages.map((e) => e.path).toList(),
-                      );
-                      Navigator.pop(context, newChat);
-                    },
+              onPressed: _pickedImages.isEmpty ? null : _saveChat,
             ),
           ),
         ],

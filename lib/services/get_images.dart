@@ -14,7 +14,7 @@ class Getimages {
   Future<List<DetailsModel>> getImages() async {
     try {
       var response = await dio.get(
-          'https://8a07-41-232-169-128.ngrok-free.app/api/images?page=1&limit=28',
+          'https://d628-196-136-170-60.ngrok-free.app/api/images?page=1&limit=28',
           options: Options(
             headers: {'Accept': 'application/json'},
             followRedirects: false,
@@ -42,7 +42,7 @@ class Getimages {
   Future<List<Homepage2Model>> getOutImages() async {
     try {
       var response = await dio.get(
-          'https://8a07-41-232-169-128.ngrok-free.app/api/letters?page=1&limit=28',
+          'https://d628-196-136-170-60.ngrok-free.app/api/letters?page=1&limit=28',
           options: Options(
             headers: {'Accept': 'application/json'},
             followRedirects: false,
@@ -70,7 +70,7 @@ class Getimages {
   Future<List<WordsModel>> getWords() async {
     try {
       var response = await dio.get(
-          'https://3cb6-41-232-169-128.ngrok-free.app/api/words?page=1&limit=28',
+          'https://d628-196-136-170-60.ngrok-free.app/words?page=1&limit=28',
           options: Options(
             headers: {'Accept': 'application/json'},
             followRedirects: false,

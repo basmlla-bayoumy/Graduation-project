@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 class AIImageService {
   final Dio _dio = Dio();
-  final String baseUrl = "https://9ae3-156-205-102-12.ngrok-free.app";
+  final String baseUrl = "https://e630-2c0f-fc89-80b3-66d7-251d-e948-34bf-c63.ngrok-free.app";
 
   Future<Map<String, dynamic>> uploadImage(File imageFile) async {
     try {

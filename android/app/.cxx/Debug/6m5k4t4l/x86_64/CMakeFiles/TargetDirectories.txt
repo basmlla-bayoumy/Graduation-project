@@ -1,0 +1,2 @@
+C:/Test1/Graduation project Flutter/LearnMe/android/app/.cxx/Debug/6m5k4t4l/x86_64/CMakeFiles/edit_cache.dir
+C:/Test1/Graduation project Flutter/LearnMe/android/app/.cxx/Debug/6m5k4t4l/x86_64/CMakeFiles/rebuild_cache.dir

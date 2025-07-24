@@ -1,22 +1,28 @@
-// class ChatModel {
-//   final String message;
-//   final String subtitle;
-  
+import 'package:hive/hive.dart';
 
-//   ChatModel(this.message, this.subtitle, {required List<String> imagePaths, String? imagePath});
-// }
+part 'chat_model.g.dart';
 
-
-
-
-
-
-
-class ChatModel {
+@HiveType(typeId: 0)
+class ChatModel extends HiveObject {
+  @HiveField(0)
   final String message;
-  final String subtitle;
-  final List<String>? imagePaths;
-  final String? imagePath;
 
-  ChatModel(this.message, this.subtitle, {this.imagePaths, this.imagePath});
+  @HiveField(1)
+  final String subtitle;
+
+  @HiveField(2)
+  final List<String> imagePaths;
+
+  @HiveField(3)
+  final List<String> aiResponses;
+
+  ChatModel({
+    required this.message,
+    required this.subtitle,
+    required this.imagePaths,
+    required this.aiResponses,
+  });
 }
+
+
+
