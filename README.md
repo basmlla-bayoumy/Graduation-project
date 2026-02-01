@@ -1,16 +1,25 @@
 # Learn Me APP 
+🌟 About the Project
 
-A new Flutter project.
+Learn Me is a Flutter-based educational application designed to support people with special needs, especially deaf and mute users.
+The app helps users learn letters and basic words in an easy and interactive way, aiming to make learning more accessible and inclusive.
 
-## Getting Started
+🎯 Project Idea
 
-This project is a starting point for a Flutter application.
+The main goal of Learn Me is to assist deaf and mute users in learning letters and words through simple navigation and smart features.
+The application also integrates an AI model that allows users to capture a sign language gesture and receive the corresponding letter or word.
 
-A few resources to get you started if this is your first Flutter project:
+✨ Features
+User authentication (Login & Sign Up)
+Choose learning mode:
+Letters&Words
+AI-powered feature 
+(Capture a sign language gesture /Get the related letter or word/Simple and user-friendly interface/Designed with accessibility in mind)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+🛠 Technologies Used (Flutter / Dart / REST APIs / AI Model Integration)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+📂 Project Structure
+
+lib/ → Application source code
+
+pubspec.yaml → Dependencies and configuration
